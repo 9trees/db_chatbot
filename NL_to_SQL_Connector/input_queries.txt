@@ -1,0 +1,8 @@
+What is the total number of pending alerts that i have in my area?
+How many Transformers in my area have new alerts today?
+How many DTs have been manufactured between the years 1995 to 1999?
+How many DTs are of 500kVA in my area?
+How many transformers are there in my area?
+how many DTs are of Siemens make?
+How many DTs that are installed in Anna Nagar East were manufactured last year?
+What has been the average load of Fair deal apparent DT been across last week?
