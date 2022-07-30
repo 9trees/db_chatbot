@@ -1,28 +1,22 @@
 from utils import configs
-import re
+import sqlparse
 
 class SQLQueryParser:
 
     def __init__(self):
+        self.parsedTokens = None
         self.processedQuery = None
         self.resultColumns = None
         self.resultClause = None
         self.conditionalColumns = None
         self.conditionalClause = None
-        self.resultClauseList = ['COUNT', 'DISTINCT', 'SUM', 'SUM']
-        self.conditionalClauseList = ['AND', 'OR', 'TO', '=', 'IN']
-        self.operatorsClauseList = ['=','OR']
-
-
-        pass
 
     def parseQuery(self, query):
         self.processedQuery = query
         self.rightAndLeftStrip()
         self.replaceTableName()
         self.findResultColumn()
-
-
+        self.parsedTokens = sqlparse.parse(self.processedQuery)[0].tokens
         pass
 
     def rightAndLeftStrip(self):
@@ -33,10 +27,8 @@ class SQLQueryParser:
         self.processedQuery = self.processedQuery.replace(" table ", " " + tableName + " ")
 
     def findResultColumn(self):
-        regex = re.compile('|'.join(re.escape(x) for x in self.resultClauseList))
-        SQLResultClause = re.findall(regex, self.processedQuery)[0]
-        columns = self.processedQuery.split('SELECT')[-1].split('FROM')[0].split(SQLResultClause)[-1].split(',')
-        self.resultColumns = [i.lstrip().rstrip() for i in columns]
+       findGroups =  [i for i in self.parsedTokens if i.is_group]
+
 
     def findConditionalColumns(self):
         regex = re.compile('|'.join(re.escape(x) for x in self.conditionalClauseList))
