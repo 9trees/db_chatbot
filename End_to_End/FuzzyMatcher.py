@@ -23,10 +23,6 @@ class FuzzyMatch:
         for i, vv in enumerate(self.sqlColumnsProcessed):
             self.sqlColumnsMatrix[i] = np.mean([self.model[v] for v in vv.split() if (v in self.model)], axis=0)
 
-    def runSQLQueryCorrector(self, query):
-
-        pass
-
     def cosineSimilarity(self, inputText):
         tokens = list()
         for text in [inputText]:
@@ -41,9 +37,12 @@ class FuzzyMatch:
         similarityScore = {}
         for token, idx, ss in zip(unique_tokens, scores.argmax(axis=1), scores.max(axis=1)):
             if ss >= 0.7:
-                similarityScore.update({token: self.sqlColumnsProcessed[idx]})
+                similarityScore.update({ss: self.sqlColumnsProcessed[idx]})
 
-        return similarityScore
+        if not similarityScore:
+            return {inputText: inputText.upper().replace(' ','_')}
+        else:
+            return {inputText: similarityScore[max(similarityScore)].upper().replace(' ','_')}
 
     def clean_text_tokenizer(self, text):
         text = fix_text(text)
@@ -53,3 +52,7 @@ class FuzzyMatch:
         text = text.translate(self.translator)
         text = re.sub(" +", " ", text).strip()
         return [tok for tok in text.split() if (tok not in self.stopWords and tok in self.model)]
+
+
+# a = FuzzyMatch()
+# b = a.cosineSimilarity('year manufactured')

@@ -1,23 +1,24 @@
 from utils import configs
+from FuzzyMatcher import FuzzyMatch
 import sqlparse
+import re
+
 
 class SQLQueryParser:
 
     def __init__(self):
+        self.fuzzyMatcher = FuzzyMatch()
         self.parsedTokens = None
         self.processedQuery = None
-        self.resultColumns = None
-        self.resultClause = None
-        self.conditionalColumns = None
-        self.conditionalClause = None
+        self.columnNames = []
 
     def parseQuery(self, query):
         self.processedQuery = query
         self.rightAndLeftStrip()
+        self.findColumns()
         self.replaceTableName()
-        self.findResultColumn()
-        self.parsedTokens = sqlparse.parse(self.processedQuery)[0].tokens
-        pass
+        self.replaceColumnNames()
+        return self.processedQuery
 
     def rightAndLeftStrip(self):
         self.processedQuery = self.processedQuery.replace("<pad> ", '').replace("</s>", '')
@@ -26,18 +27,31 @@ class SQLQueryParser:
         tableName = configs['TableName']
         self.processedQuery = self.processedQuery.replace(" table ", " " + tableName + " ")
 
-    def findResultColumn(self):
-       findGroups =  [i for i in self.parsedTokens if i.is_group]
+    def findColumns(self):
+        for tempToken in sqlparse.parse(self.processedQuery)[0].tokens:
+            if type(tempToken) == sqlparse.sql.Identifier:
+                self.columnNames.append(tempToken.value)
+            elif tempToken.is_group and tempToken.tokens[0].value.startswith('WHERE'):
+                for tempTokenGroup in tempToken.tokens:
+                    if type(tempTokenGroup) == sqlparse.sql.Identifier:
+                        self.columnNames.append(tempTokenGroup.value)
+                    elif type(tempTokenGroup) == sqlparse.sql.Comparison:
+                        if type(tempTokenGroup.tokens[0]) == sqlparse.sql.Identifier:
+                            self.columnNames.append(tempTokenGroup.tokens[0].value)
+
+        self.columnNames = list(set(self.columnNames))
+
+    def replaceColumnNames(self):
+
+        replaceList = []
+        for column in self.columnNames:
+            replaceList.append(self.fuzzyMatcher.cosineSimilarity(column))
+
+        print(replaceList)
+
+        for i in replaceList:
+            self.processedQuery = self.processedQuery.replace(list(i.keys())[0], list(i.values())[0])
 
 
-    def findConditionalColumns(self):
-        regex = re.compile('|'.join(re.escape(x) for x in self.conditionalClauseList))
-        SQLResultClause = re.findall(regex, self.processedQuery)[0]
-        columns = self.processedQuery.split('WHERE ')[-1].split('FROM')[0].split(SQLResultClause)[-1].split(',')
-        self.resultColumns = [i.lstrip().rstrip() for i in columns]
-
-
-a = "<pad> SELECT COUNT DT FROM table WHERE Manufacturer = Siemens</s>"
-
-d = SQLQueryParser()
-d.parseQuery(a)
+a = SQLQueryParser()
+g = a.parseQuery('<pad> SELECT COUNT DT FROM table WHERE Manufacturer = Siemens</s>')

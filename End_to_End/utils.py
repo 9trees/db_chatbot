@@ -43,3 +43,8 @@ def getConfig():
 
 
 configs = getConfig()
+
+logicalReplacements = {
+    'DT': 'DT_ID', 'DISTRIBUTION TRANSFORMER': 'DT_ID', 'MANUFACTURER': 'MAKE' ,'TRANSFORMERS': 'DT_ID',
+    'Location': 'AREA'
+                       }
