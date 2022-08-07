@@ -11,8 +11,13 @@ class DBChatBot:
         self.dbConnection = connectToDigitalOcean()
         self.sqlParser = SQLQueryParser()
 
-    def askMeAnything(self,question):
+    def askMeAnything(self, question):
         sqlQuery = self.T5SQLConnector.runModel(question)
+        cleanQuery = self.sqlParser.parseQuery(sqlQuery)
+        dataFrame = pd.read_sql(cleanQuery, con=connectToDigitalOcean())
+        columnName = list(dataFrame.columns)[0]
+        print(dataFrame.iloc[0][columnName])
 
-        dataFrame = pd.read_sql(sqlQuery, con=connectToDigitalOcean())
 
+chatbot = DBChatBot()
+chatbot.askMeAnything('how many DTs are of Siemens make?')

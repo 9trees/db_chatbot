@@ -13,6 +13,10 @@ sqlColumns = ['DT_ID',
               'MAKE',
               'MANUFACTURE_YEAR']
 
+logicalReplacements = {
+    'DT': 'DT_ID', 'DISTRIBUTION TRANSFORMER': 'DT_ID', 'MANUFACTURER': 'MAKE' ,'TRANSFORMERS': 'DT_ID',
+    'Location': 'AREA', 'TRANSFORMER':  'DT_ID'
+                       }
 
 def getConfig():
     """
@@ -43,8 +47,3 @@ def getConfig():
 
 
 configs = getConfig()
-
-logicalReplacements = {
-    'DT': 'DT_ID', 'DISTRIBUTION TRANSFORMER': 'DT_ID', 'MANUFACTURER': 'MAKE' ,'TRANSFORMERS': 'DT_ID',
-    'Location': 'AREA'
-                       }
