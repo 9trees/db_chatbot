@@ -2,10 +2,8 @@ from connect_to_db import connectToDigitalOcean
 import pandas as pd
 from T5SQLConnector import T5SQLConnector
 from SQLQueryParser import SQLQueryParser
-
-
+#video
 class DBChatBot:
-
     def __init__(self):
         self.T5SQLConnector = T5SQLConnector()
         self.dbConnection = connectToDigitalOcean()
@@ -20,4 +18,9 @@ class DBChatBot:
 
 
 chatbot = DBChatBot()
-chatbot.askMeAnything('how many DTs are of Siemens make?')
+#video
+
+# chatbot.askMeAnything('how many DTs are of Siemens make?')
+# chatbot.askMeAnything('how many DTs are of BDI make?')
+# chatbot.askMeAnything('How many Transformers in my area have new alerts today?')
+chatbot.askMeAnything('How many DTs have been manufactured between the years 1995 to 1999?')

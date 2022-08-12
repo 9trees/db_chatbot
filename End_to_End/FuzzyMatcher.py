@@ -31,7 +31,6 @@ class FuzzyMatch:
         token_count_dict = dict(Counter(tokens))
         unique_tokens = list(token_count_dict)
         unique_tokens_mtx = np.array([self.model[t] for t in unique_tokens])
-
         scores = cosine_similarity(unique_tokens_mtx, self.sqlColumnsMatrix)
 
         similarityScore = {}
@@ -55,4 +54,4 @@ class FuzzyMatch:
 
 
 # a = FuzzyMatch()
-# b = a.cosineSimilarity('year manufactured')
+# b = a.cosineSimilarity('Years manufactured')

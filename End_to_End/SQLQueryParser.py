@@ -11,15 +11,16 @@ class SQLQueryParser:
         self.parsedTokens = None
         self.processedQuery = None
         self.columnNames = []
+        self.values = []
 
     def parseQuery(self, query):
         self.processedQuery = query
         self.rightAndLeftStrip()
-        self.findColumns()
         self.replaceComparisonStrings()
+        self.keywordFormatter()
+        self.findColumns()
         self.replaceColumnNames()
         self.replaceTableName()
-        self.keywordFormatter()
         self.SQLFormatter()
         return self.processedQuery
 
@@ -31,28 +32,33 @@ class SQLQueryParser:
         self.processedQuery = self.processedQuery.replace(" TABLE ", " " + tableName + " ")
 
     def findColumns(self):
-        # for tempToken in sqlparse.parse(self.processedQuery)[0].tokens:
-        #     if type(tempToken) == sqlparse.sql.Identifier:
-        #         self.columnNames.append(tempToken.value)
-        #     elif tempToken.is_group and tempToken.tokens[0].value.startswith('WHERE'):
-        #         for tempTokenGroup in tempToken.tokens:
-        #             if type(tempTokenGroup) == sqlparse.sql.Identifier:
-        #                 self.columnNames.append(tempTokenGroup.value)
-        #             elif type(tempTokenGroup) == sqlparse.sql.Comparison:
-        #                 if type(tempTokenGroup.tokens[0]) == sqlparse.sql.Identifier:
-        #                     self.columnNames.append(tempTokenGroup.tokens[0].value)
+        tokenizedQuery = sqlparse.parse(self.processedQuery)[0].tokens
+        for parent in tokenizedQuery:
+            if type(parent) == sqlparse.sql.Identifier and parent.is_group:
+                self.columnNames.append(parent.value)
+            elif parent.is_group:
+                for child in parent.tokens:
+                    if type(child) == sqlparse.sql.Identifier and child.is_group:
+                        self.columnNames.append(child.value)
+                    elif not child.value.startswith('WHERE') and child.is_keyword and \
+                            child.value not in ['AND','OR','BETWEEN','IS','NULL', 'TO']:
+                        self.columnNames.append(child.value)
+                    elif type(child) == sqlparse.sql.Comparison:
+                        for comChild in child.tokens:
+                            if type(comChild) == sqlparse.sql.Identifier and comChild.is_group:
+                                self.columnNames.append(comChild.value)
+                            elif comChild.ttype == sqlparse.tokens.Token.Literal.String.Single:
+                                self.values.append(comChild.value.replace("'", ''))
+                    elif child.ttype == sqlparse.tokens.Token.Literal.Number.Integer:
+                        self.values.append(child.value)
 
-        sqlStatement = sqlparse.format(self.processedQuery, reindent=True,
-                                       keyword_case='upper', comma_first=True, identifier_case='lower')
+        # remove empty string from the list
+        if '' in self.columnNames:
+            self.columnNames.remove('')
 
-        for words in sqlStatement.replace('\n', ' ').split('=')[0].split(' '):
-            if words.islower():
-                self.columnNames.append(words)
-
-        self.columnNames = list(set(self.columnNames))
+        self.columnNames = [i for i in self.columnNames if i.upper() not in ['AND','OR','BETWEEN','IS','NULL', 'TO']]
 
     def replaceColumnNames(self):
-
         replaceList = []
         for column in self.columnNames:
             replaceList.append(self.fuzzyMatcher.cosineSimilarity(column))
@@ -73,7 +79,7 @@ class SQLQueryParser:
                 comparisonStrings.append(words)
 
         for words in comparisonStrings:
-            self.processedQuery = self.processedQuery.replace(words,"'"+words+"'")
+            self.processedQuery = self.processedQuery.replace(words, "'" + words + "'")
 
     def SQLFormatter(self):
         self.processedQuery = sqlparse.format(self.processedQuery, comma_first=True)
@@ -81,11 +87,12 @@ class SQLQueryParser:
     def keywordFormatter(self):
         if ' COUNT ' in self.processedQuery:
             word = self.processedQuery.split(' COUNT ')[1].split(' ')[0]
-            self.processedQuery = self.processedQuery.replace(word,"("+word+")")
+            self.processedQuery = self.processedQuery.replace(word, "(" + word + ")")
 
-
-
+        if ' = ' in self.processedQuery and ' to ' in self.processedQuery:
+            self.processedQuery = self.processedQuery.replace('=', "BETWEEN").replace(' to ', ' AND ')
 
 
 # a = SQLQueryParser()
-# g = a.parseQuery('<pad> SELECT COUNT DT FROM table WHERE Manufacturer = Siemens</s>')
+# query = '<pad> SELECT COUNT DTs FROM table WHERE kW = 500kVA</s>'
+# g = a.parseQuery(query)
