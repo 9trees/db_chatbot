@@ -16,3 +16,6 @@ class T5SQLConnector:
                                      attention_mask=features['attention_mask'])
 
         return self.tokenizer.decode(output[0])
+#
+# a = T5SQLConnector()
+# print(a.runModel('how many transformers having 300 load ?'))

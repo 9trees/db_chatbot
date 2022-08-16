@@ -15,7 +15,7 @@ sqlColumns = ['DT_ID',
 
 logicalReplacements = {
     'DT': 'DT_ID', 'DISTRIBUTION TRANSFORMER': 'DT_ID', 'MANUFACTURER': 'MAKE' ,'TRANSFORMERS': 'DT_ID',
-    'Location': 'AREA', 'TRANSFORMER':  'DT_ID' , 'CAPACITY':'RATED_CAPACITY'
+    'Location': 'AREA', 'TRANSFORMER':  'DT_ID' , 'CAPACITY':'RATED_CAPACITY' , 'kW':'RATED_CAPACITY' ,
                        }
 
 def getConfig():

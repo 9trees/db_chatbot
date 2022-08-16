@@ -28,6 +28,9 @@ class FuzzyMatch:
         for text in [inputText]:
             tokens += self.clean_text_tokenizer(text)
 
+        if not tokens:
+            return {inputText:inputText}
+
         token_count_dict = dict(Counter(tokens))
         unique_tokens = list(token_count_dict)
         unique_tokens_mtx = np.array([self.model[t] for t in unique_tokens])
@@ -54,4 +57,4 @@ class FuzzyMatch:
 
 
 # a = FuzzyMatch()
-# b = a.cosineSimilarity('Years manufactured')
+# b = a.cosineSimilarity('Transformator')

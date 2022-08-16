@@ -15,13 +15,20 @@ class SQLQueryParser:
 
     def parseQuery(self, query):
         self.processedQuery = query
+        print("Query: " ,self.processedQuery)
         self.rightAndLeftStrip()
+        print("Query strip: ", self.processedQuery)
         self.replaceComparisonStrings()
+        print("Query replace Comparison Strings: ", self.processedQuery)
         self.keywordFormatter()
+        print("Query keyword Formatter: ", self.processedQuery)
         self.findColumns()
         self.replaceColumnNames()
+        print("Query replaced columns: ", self.processedQuery)
         self.replaceTableName()
+        print("Query replaced table names: ", self.processedQuery)
         self.SQLFormatter()
+        print("Final Query: ", self.processedQuery)
         return self.processedQuery
 
     def rightAndLeftStrip(self):
@@ -29,7 +36,7 @@ class SQLQueryParser:
 
     def replaceTableName(self):
         tableName = configs['TableName']
-        self.processedQuery = self.processedQuery.replace(" TABLE ", " " + tableName + " ")
+        self.processedQuery = self.processedQuery.replace("TABLE", " " + tableName + " ")
 
     def findColumns(self):
         tokenizedQuery = sqlparse.parse(self.processedQuery)[0].tokens
@@ -57,6 +64,7 @@ class SQLQueryParser:
             self.columnNames.remove('')
 
         self.columnNames = [i for i in self.columnNames if i.upper() not in ['AND','OR','BETWEEN','IS','NULL', 'TO']]
+        print(self.columnNames)
 
     def replaceColumnNames(self):
         replaceList = []
@@ -70,16 +78,17 @@ class SQLQueryParser:
             self.processedQuery = re.sub(r'\b' + word + r'\b', initial, self.processedQuery.upper())
 
     def replaceComparisonStrings(self):
-        sqlStatement = sqlparse.format(self.processedQuery,
-                                       keyword_case='upper', comma_first=True)
+        if '=' in self.processedQuery:
+            sqlStatement = sqlparse.format(self.processedQuery,
+                                           keyword_case='upper', comma_first=True)
 
-        comparisonStrings = []
-        for words in sqlStatement.split('= ')[1].split(' '):
-            if not words.isdigit():
-                comparisonStrings.append(words)
+            comparisonStrings = []
+            for words in sqlStatement.split('= ')[1].split(' '):
+                if not words.isdigit():
+                    comparisonStrings.append(words)
 
-        for words in comparisonStrings:
-            self.processedQuery = self.processedQuery.replace(words, "'" + words + "'")
+            for words in comparisonStrings:
+                self.processedQuery = self.processedQuery.replace(words, "'" + words + "'")
 
     def SQLFormatter(self):
         self.processedQuery = sqlparse.format(self.processedQuery, comma_first=True)
