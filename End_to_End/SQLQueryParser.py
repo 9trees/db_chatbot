@@ -15,20 +15,20 @@ class SQLQueryParser:
 
     def parseQuery(self, query):
         self.processedQuery = query
-        print("Query: " ,self.processedQuery)
+        # print("Query: " ,self.processedQuery)
         self.rightAndLeftStrip()
-        print("Query strip: ", self.processedQuery)
+        # print("Query strip: ", self.processedQuery)
         self.replaceComparisonStrings()
-        print("Query replace Comparison Strings: ", self.processedQuery)
+        # print("Query replace Comparison Strings: ", self.processedQuery)
         self.keywordFormatter()
-        print("Query keyword Formatter: ", self.processedQuery)
+        # print("Query keyword Formatter: ", self.processedQuery)
         self.findColumns()
         self.replaceColumnNames()
-        print("Query replaced columns: ", self.processedQuery)
+        # print("Query replaced columns: ", self.processedQuery)
         self.replaceTableName()
-        print("Query replaced table names: ", self.processedQuery)
+        # print("Query replaced table names: ", self.processedQuery)
         self.SQLFormatter()
-        print("Final Query: ", self.processedQuery)
+        # print("Final Query: ", self.processedQuery)
         return self.processedQuery
 
     def rightAndLeftStrip(self):
@@ -64,7 +64,7 @@ class SQLQueryParser:
             self.columnNames.remove('')
 
         self.columnNames = [i for i in self.columnNames if i.upper() not in ['AND','OR','BETWEEN','IS','NULL', 'TO']]
-        print(self.columnNames)
+        # print(self.columnNames)
 
     def replaceColumnNames(self):
         replaceList = []
