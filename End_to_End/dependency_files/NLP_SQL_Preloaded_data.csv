@@ -1,0 +1,19 @@
+﻿Question,Sql
+how many DTs are of Siemens make?,SELECT COUNT (DT_ID) FROM  DT_test_Table1  WHERE MAKE = 'SIEMENS'
+How many DTs have been manufactured between the years 1995 to 1999?,SELECT COUNT (DT_ID) FROM  DT_test_Table1  WHERE MANUFACTURE_YEAR BETWEEN 1995 AND 1999
+how many transformers having 300 load ?,SELECT COUNT (DT_ID) FROM  DT_test_Table1  WHERE LOAD_DATA = 300
+list all the alerts which are pending?,SELECT ALERT FROM  DT_test_Table1  WHERE ALERT_STATUS = 'PENDING'
+list all the Alerts?,SELECT ALERT FROM  DT_test_Table1
+list all the  Dt for alerts status which are pending?,SELECT DT_ID FROM  DT_test_Table1  WHERE ALERT_STATUS = 'PENDING'
+list all the DT from Nungampakkam area?, SELECT DT_ID FROM  DT_test_Table1  WHERE AREA = 'NUNGAMPAKKAM'
+list all the DT?,SELECT DT_ID FROM  DT_test_Table1
+total count of alerts?,SELECT COUNT (ALERT) FROM  DT_test_Table1
+how many DTs are of BDI make?,SELECT COUNT (DT_ID) FROM  DT_test_Table1  WHERE MAKE = 'BDI'
+show me the all data? ,SELECT * FROM DT_test_Table1
+list me the all data? ,SELECT * FROM DT_test_Table1
+what are the types of make available? ,SELECT DISTINCT MAKE FROM DT_test_Table1
+what are the types of Alerts available? ,SELECT DISTINCT ALERT_STATUS FROM DT_test_Table1
+what are the types of loads available? ,SELECT DISTINCT  LOAD_DATA FROM DT_test_Table1
+show me the distinct types of make available?,SELECT DISTINCT MAKE FROM DT_test_Table1
+show me the distinct types of Alerts available? ,SELECT DISTINCT ALERT_STATUS FROM DT_test_Table1
+show me the distinct of loads available? ,SELECT DISTINCT  LOAD_DATA FROM DT_test_Table1

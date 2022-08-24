@@ -1,26 +1,22 @@
 import json
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import pandas as pd
 
 
 class RecommendationModule:
     def __init__(self):
-        self.questionsList = ['how many DTs are of Siemens make?', 'how many DTs are of BDI make?',
-                              'How many DTs have been manufactured between the years 1995 to 1999?',
-                              'how many transformers having 300 load ?',
-                              'list all the alerts which are pending?',
-                              'list all the Alerts?',
-                              'list all the alerts which are pending?',
-                              'list all the  Dt for alerts status which are pending?',
-                              'list all the DT from Nungampakkam area?',
-                              'list all the DT?',
-                              'total count of alerts?'
-                              ]
+        self.NLP2SQLPreLoadedData = pd.read_csv(r"dependency_files\NLP_SQL_Preloaded_data.csv")
+        self.NLP2SQLPreLoadedData.Question = self.NLP2SQLPreLoadedData.Question.apply( lambda x: x.lower())
+        self.questionsList = list(self.NLP2SQLPreLoadedData.Question)
+        self.NLP2SQLPreLoadedDataJSON = {}
+        for row in self.NLP2SQLPreLoadedData.itertuples():
+            self.NLP2SQLPreLoadedDataJSON[row.Question] = row.Sql
         self.tokenizedQuestion = [word_tokenize(i) for i in self.questionsList]
         self.sw = stopwords.words('english')
         self.tokenizedQuestionSet = [{w for w in i if not w in self.sw} for i in self.tokenizedQuestion]
 
-    def suggestTheQuestion(self, question):
+    def suggestTheQuestion(self, question, needType='cache'):
         # tokenization
         X_list = word_tokenize(question)
 
@@ -51,12 +47,18 @@ class RecommendationModule:
             cosine = c / float((sum(l1) * sum(l2)) ** 0.5)
             similarityScore.update({self.questionsList[Y_set]: cosine})
 
-        if max(similarityScore.values()) > 0.6:
-            # print(similarityScore)
-            return max(similarityScore.items(), key = lambda k : k[1])[0]
+        if needType == 'cache':
+            if max(similarityScore.values()) > 0.78:
+                # print(similarityScore)
+                return self.NLP2SQLPreLoadedDataJSON[max(similarityScore.items(), key=lambda k: k[1])[0]]
+            else:
+                pass
         else:
-            pass
-
+            if max(similarityScore.values()) > 0.65:
+                # print(similarityScore)
+                return max(similarityScore.items(), key=lambda k: k[1])[0]
+            else:
+                pass
 
 # a = RecommendationModule()
 # b = a.suggestTheQuestion('how many transformers having load 300KV?')
