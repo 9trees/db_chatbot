@@ -120,9 +120,11 @@ def addEvents():
         apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
     df.Unnamed_column1 = df.Unnamed_column1.apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
 
+    # dt = Transformer()
+
     for row in df.itertuples():
         dtEvents = Events()
-        dtEvents.mainId = row.mainId
+        dtEvents.mainId = Transformer.objects.get(Transformer_number=row.mainId)
         dtEvents.Time_Stamp = row.Time_Stamp
         dtEvents.V_R = row.V_R
         dtEvents.V_Y = row.V_Y

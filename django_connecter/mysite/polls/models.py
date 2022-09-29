@@ -34,9 +34,9 @@ class Transformer(models.Model):
 
 
 class Events(models.Model):
-    id = models.AutoField(primary_key=True)
-    mainId = models.CharField(max_length=200)
-    Time_Stamp = models.DateTimeField()
+    # id = models.AutoField()
+    mainId = models.ForeignKey(Transformer, on_delete=models.CASCADE)
+    Time_Stamp = models.DateTimeField(primary_key=True)
     V_R = models.IntegerField(null=True)
     V_Y = models.IntegerField(null=True)
     V_B = models.IntegerField(null=True)
