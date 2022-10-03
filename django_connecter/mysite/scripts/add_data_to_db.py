@@ -3,47 +3,49 @@ import pandas as pd
 
 
 def run():
-    # addDataToTransformer()
+    addDataToTransformer()
     addEvents()
 
 
 def addDataToTransformer():
-    transformer = Transformer()
-    transformer.Manufacturer_name = 'KEL'
-    transformer.Transformer_location_name = 'GRACE CAKE SHOP, RAMASAMY SALAI'
-    transformer.Transformer_number = 'SNO1000005'
-    transformer.Meter_number = 'DBG1000005'
-    transformer.Manufacturer_Serial_number = None
-    transformer.Section = 'K K Nagar'
-    transformer.Sub_Division = 'K K Nagar'
-    transformer.Division = 'K K Nagar'
-    transformer.Circle = 'South 1 /SE /CEDC'
-    transformer.Region = 'Chennai South'
-    transformer.Latitude = '13.0413615'
-    transformer.Longitude = '80.1979'
-    transformer.Status = 'Communication Connected'
-    transformer.Transformers_Name_plate = None
-    transformer.KVA = 500
-    transformer.Volts_H_V = 440
-    transformer.Volts_L_V = 220
-    transformer.Amperes_H_V = 666
-    transformer.Amperes_L_V = 666
-    transformer.Phases_HV = 3
-    transformer.Phases_LV = 3
-    transformer.Type_of_Cooling = 'ONAN'
-    transformer.Impedance_volts = '4.5 (%)'
-    transformer.Connection_symbols = 'DY 11'
-    transformer.Core_and_winding = '800 Kg'
-    transformer.Total_weight = '1500 Kg'
-    transformer.Oil = '300 L'
-    import datetime
-    year = datetime.datetime(2015, 1, 1, 0, 0)
-    transformer.Year_of_manufacturer = year
-    transformer.save()
+    df = pd.read_csv(r"C:\Tamil\temp\db_chatbot\django_connecter\mysite\csv\DT_details.csv")
+    df.Year_of_manufacturer = df.Year_of_manufacturer.astype('datetime64[ns]')
+
+    for row in df.itertuples():
+        transformer = Transformer()
+        transformer.Manufacturer_name = row.Manufacturer_name
+        transformer.Transformer_location_name = row.Transformer_location_name
+        transformer.Transformer_number = row.Transformer_number
+        transformer.Meter_number = row.Meter_number
+        transformer.Manufacturer_Serial_number = row.Manufacturer_Serial_number
+        transformer.Section = row.Section
+        transformer.Sub_Division = row.Sub_Division
+        transformer.Division = row.Division
+        transformer.Circle = row.Circle
+        transformer.Region = row.Region
+        transformer.Latitude = row.Latitude
+        transformer.Longitude = row.Longitude
+        transformer.Status = row.Status
+        transformer.Transformers_Name_plate = row.Transformers_Name_plate
+        transformer.KVA = row.KVA
+        transformer.Volts_H_V = row.Volts_H_V
+        transformer.Volts_L_V = row.Volts_L_V
+        transformer.Amperes_H_V = row.Amperes_H_V
+        transformer.Amperes_L_V = row.Amperes_L_V
+        transformer.Phases_HV = row.Phases_HV
+        transformer.Phases_LV = row.Phases_LV
+        transformer.Type_of_Cooling = row.Type_of_Cooling
+        transformer.Impedance_volts = row.Impedance_volts
+        transformer.Connection_symbols = row.Connection_symbols
+        transformer.Core_and_winding = row.Core_and_winding
+        transformer.Total_weight = row.Total_weight
+        transformer.Oil = row.Oil
+        transformer.Year_of_manufacturer = row.Year_of_manufacturer
+        transformer.save()
 
 
 def addEvents():
-    df = pd.read_csv(r"C:\Tamil\temp\db_chatbot\django_connecter\mysite\csv\Five Day's DT Data  - 15_16.csv")
+    df = pd.read_csv(r"C:\Tamil\temp\db_chatbot\django_connecter\mysite\csv\5_DT_Data.csv")
 
     rename_columns = {'transformer': 'mainId',
                       'Date & Time Stamp': 'Time_Stamp',
@@ -98,27 +100,32 @@ def addEvents():
                       'Unnamed: 51': 'Unnamed_column1',
                       'TEMP4': 'TEMP4',
                       'TOT.KVAH': 'TOT_KVAH_1',
-                      'TOT.KVARH.LEG.1': 'TOT_KVARH_LEG',
+                      'TOT.KVARH.LEG.1': 'TOT_KVARH_LEG_1',
                       'TOT.KWH': 'TOT_KWH'}
 
     df = df.rename(columns=rename_columns)
     df.Time_Stamp = df.Time_Stamp.astype('datetime64[ns]')
+    df.KVAH_FWD = df.KVAH_FWD.apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
+    df.KVARH_LEAD_REV = df.KVARH_LEAD_REV.apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
+    df.kWH_Fwd = df.kWH_Fwd.apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
+    df.TOT_KVARH_LEG = df.TOT_KVARH_LEG.apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
+    df.TOT_KVARH_LEG_1 = df.TOT_KVARH_LEG_1.apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
     df.FRWD_APPENERGY = df.FRWD_APPENERGY.apply(lambda x: x.replace(',', '')).astype('float')
     df.FRWD_REACTENERGY = df.FRWD_REACTENERGY.apply(lambda x: x.replace(',', '')).astype('float')
     df.kVA_Y = df.kVA_Y.apply(lambda x: x.replace(',', '')).astype('float')
     df.kVAr_R = df.kVAr_R.apply(lambda x: x.replace(',', '')).astype('float')
     df.KVARH_LAG_REV = df.KVARH_LAG_REV.apply(lambda x: x.replace(',', '')).astype('float')
     df.KVARH_LEAD_FWD = df.KVARH_LEAD_FWD.apply(lambda x: x.replace(',', '')).astype('float')
-    df.KWH_REV = df.KWH_REV.apply(lambda x: x.replace(',', '')).astype('float')
+    df.KWH_REV = df.KWH_REV.apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
     df.TOT_KVAH_1 = df.TOT_KVAH_1.apply(lambda x: x.replace(',', '')).astype('float')
     df.Frwd_kWh = df.Frwd_kWh.apply(lambda x: x.replace(',', '')).astype('float')
-    # df.TOT_KVARH_LEG = df.TOT_KVARH_LEG.apply(lambda x: x.replace(',', '')).astype('float')
     df.TOT_KWH = df.TOT_KWH.apply(lambda x: x.replace(',', '')).astype('float')
     df.REV_ACTENERGY = df.REV_ACTENERGY.apply(lambda x: x.replace('-', '0')).astype('float')
     df.kW_R = df.kW_R.apply(lambda x: x.replace('-', '0')).astype('float')
     df.TOT_kWh_Fwd_kWh_Active_Energy_Sent_Out = df.TOT_kWh_Fwd_kWh_Active_Energy_Sent_Out. \
         apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
     df.Unnamed_column1 = df.Unnamed_column1.apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
+    df.KVARH_LAG_FWD = df.KVARH_LAG_FWD.apply(lambda x: x.replace(',', '').replace('-', '0')).astype('float')
 
     # dt = Transformer()
 
@@ -172,11 +179,11 @@ def addEvents():
         dtEvents.REV_APPENERGY = row.REV_APPENERGY
         dtEvents.REV_REACTENERGY = row.REV_REACTENERGY
         dtEvents.TOT_kVAh = row.TOT_kVAh
-        dtEvents.TOT_KVARH_LEG = row.TOT_KVARH_LEG
         dtEvents.TOT_kWh_Fwd_kWh_Active_Energy_Sent_Out = row.TOT_kWh_Fwd_kWh_Active_Energy_Sent_Out
         dtEvents.Unnamed_column1 = row.Unnamed_column1
         dtEvents.TEMP4 = row.TEMP4
         dtEvents.TOT_KVAH_1 = row.TOT_KVAH_1
         dtEvents.TOT_KVARH_LEG = row.TOT_KVARH_LEG
+        dtEvents.TOT_KVARH_LEG_1 = row.TOT_KVARH_LEG_1
         dtEvents.TOT_KWH = row.TOT_KWH
         dtEvents.save()
