@@ -23,6 +23,7 @@ class SQLQueryParser:
         self.keywordFormatter()
         print("Query keyword Formatter: ", self.processedQuery)
         self.findColumns()
+        print("Columns found: ", self.columnNames)
         self.replaceColumnNames()
         print("Query replaced columns: ", self.processedQuery)
         self.replaceTableName()
@@ -36,28 +37,31 @@ class SQLQueryParser:
 
     def replaceTableName(self):
         tableName = configs['TableName']
-        self.processedQuery = self.processedQuery.replace("TABLE", " " + tableName + " ")
+        self.processedQuery = self.processedQuery.replace("table", " " + tableName + " ")
 
     def findColumns(self):
         tokenizedQuery = sqlparse.parse(self.processedQuery)[0].tokens
         for parent in tokenizedQuery:
-            if type(parent) == sqlparse.sql.Identifier and parent.is_group:
-                self.columnNames.append(parent.value)
-            elif parent.is_group:
-                for child in parent.tokens:
-                    if type(child) == sqlparse.sql.Identifier and child.is_group:
-                        self.columnNames.append(child.value)
-                    elif not child.value.startswith('WHERE') and child.is_keyword and \
-                            child.value not in ['AND','OR','BETWEEN','IS','NULL', 'TO']:
-                        self.columnNames.append(child.value)
-                    elif type(child) == sqlparse.sql.Comparison:
-                        for comChild in child.tokens:
-                            if type(comChild) == sqlparse.sql.Identifier and comChild.is_group:
-                                self.columnNames.append(comChild.value)
-                            elif comChild.ttype == sqlparse.tokens.Token.Literal.String.Single:
-                                self.values.append(comChild.value.replace("'", ''))
-                    elif child.ttype == sqlparse.tokens.Token.Literal.Number.Integer:
-                        self.values.append(child.value)
+            if not parent.is_whitespace: # excluding the white space tokens
+                if not parent.is_group and parent.ttype == sqlparse.tokens.Name.Builtin:
+                    self.columnNames.append(parent.value)
+                if type(parent) == sqlparse.sql.Identifier and parent.is_group:
+                    self.columnNames.append(parent.value)
+                elif parent.is_group:
+                    for child in parent.tokens:
+                        if type(child) == sqlparse.sql.Identifier and child.is_group:
+                            self.columnNames.append(child.value)
+                        elif not child.value.startswith('WHERE') and child.is_keyword and \
+                                child.value not in ['AND','OR','BETWEEN','IS','NULL', 'TO']:
+                            self.columnNames.append(child.value)
+                        elif type(child) == sqlparse.sql.Comparison:
+                            for comChild in child.tokens:
+                                if type(comChild) == sqlparse.sql.Identifier and comChild.is_group:
+                                    self.columnNames.append(comChild.value)
+                                elif comChild.ttype == sqlparse.tokens.Token.Literal.String.Single:
+                                    self.values.append(comChild.value.replace("'", ''))
+                        elif child.ttype == sqlparse.tokens.Token.Literal.Number.Integer:
+                            self.values.append(child.value)
 
         # remove empty string from the list
         if '' in self.columnNames:
@@ -68,14 +72,20 @@ class SQLQueryParser:
 
     def replaceColumnNames(self):
         replaceList = []
+        # for column in self.columnNames:
+        #     replaceList.append(self.fuzzyMatcher.cosineSimilarity(column))
         for column in self.columnNames:
-            replaceList.append(self.fuzzyMatcher.cosineSimilarity(column))
+            matchValue = self.fuzzyMatcher.fuzzywuzzy(column)
+            if matchValue:
+                replaceList.append(matchValue)
 
-        for i in replaceList:
-            self.processedQuery = self.processedQuery.replace(list(i.keys())[0], list(i.values())[0])
+        print(replaceList)
+        if replaceList:
+            for i in replaceList:
+                self.processedQuery = self.processedQuery.replace(list(i.keys())[0], list(i.values())[0])
 
         for word, initial in logicalReplacements.items():
-            self.processedQuery = re.sub(r'\b' + word + r'\b', initial, self.processedQuery.upper())
+            self.processedQuery = re.sub(r'\b' + word + r'\b', initial, self.processedQuery)
 
     def replaceComparisonStrings(self):
         if '=' in self.processedQuery:

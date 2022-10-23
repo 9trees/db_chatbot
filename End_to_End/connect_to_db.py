@@ -1,5 +1,7 @@
 import mysql.connector
 import base64
+import sqlite3
+import pandas as pd
 
 
 def getConfig():
@@ -37,3 +39,10 @@ def connectToDigitalOcean():
     )
 
     return mydb
+
+
+def connectToSqliteDB():
+    return sqlite3.connect(r"C:\Tamil\temp\db_chatbot\django_connecter\pythonsqlite.db")
+
+
+# dataFrame = pd.read_sql("SELECT Time_Stamp FROM  polls_events", con=connectToSqliteDB())

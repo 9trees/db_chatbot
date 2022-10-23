@@ -6,13 +6,18 @@ from collections import Counter
 from gensim.models import KeyedVectors
 import string
 from nltk.corpus import stopwords
-from utils import bullet_set, sqlColumns
+from utils import bullet_set, sqlColumns, getTheColumns
+import itertools
+from fuzzywuzzy import fuzz
+
 
 
 class FuzzyMatch:
 
     def __init__(self):
-        self.model = KeyedVectors.load_word2vec_format("glove.6B.50d.txt")
+        self.columnsFromTables = getTheColumns()
+        self.allColumnNames = list(itertools.chain(*[i for i in self.columnsFromTables.values()]))
+        self.model = KeyedVectors.load_word2vec_format(r"dependency_files\glove.6B.50d.txt")
         self.stopWords = stopwords.words('english')
         punctuation_set = set(string.punctuation)
         stopChar = set(list(bullet_set) + list(punctuation_set))
@@ -55,6 +60,21 @@ class FuzzyMatch:
         text = re.sub(" +", " ", text).strip()
         return [tok for tok in text.split() if (tok not in self.stopWords and tok in self.model)]
 
+    def fuzzywuzzy(self,inputText):
+        matchScores = {}
+        for i in self.allColumnNames:
+            score = fuzz.ratio(i.replace('_',' ').upper(), inputText.upper())
+            if score > 80:
+                matchScores[i] = score
+        if matchScores:
+            return {inputText:max(matchScores)}
 
-# a = FuzzyMatch()
+
+
+
+
+
+
+a = FuzzyMatch()
+g = a.fuzzywuzzy('TIMESTAMP')
 # b = a.cosineSimilarity('Transformator')
