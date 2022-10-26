@@ -75,6 +75,6 @@ class FuzzyMatch:
 
 
 
-a = FuzzyMatch()
-g = a.fuzzywuzzy('TIMESTAMP')
+# a = FuzzyMatch()
+# g = a.fuzzywuzzy('TIMESTAMP')
 # b = a.cosineSimilarity('Transformator')

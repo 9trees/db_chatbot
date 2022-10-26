@@ -20,4 +20,4 @@ class T5SQLConnector:
 
 #
 # a = T5SQLConnector()
-# print(a.runModel('types of make available?'))
+# print(a.runModel('show the alerts with manufacture names KEL?'))

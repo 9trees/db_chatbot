@@ -22,9 +22,9 @@ class DBChatBot:
         # else:
         sqlQuery = self.T5SQLConnector.runModel(question)
         cleanQuery = self.sqlParser.parseQuery(sqlQuery)
-
+        print('this is query', cleanQuery)
         try:
-            dataFrame = pd.read_sql(cleanQuery, con=connectToSqliteDB())
+            dataFrame = pd.read_sql(cleanQuery, con=self.dbConnection)
             if len(dataFrame) > 0:
                 columnName = list(dataFrame.columns)[0]
                 if len(dataFrame) == 1:
@@ -51,6 +51,8 @@ class DBChatBot:
 
 chatbot = DBChatBot()
 # video
+# chatbot.askMeAnything('count timestamp with manufacturename with KEL?')
+# chatbot.askMeAnything('show the timestamp with manufacturename as KEL?')
 # chatbot.askMeAnything('show me all the timestamp?')
 # chatbot.askMeAnything('how many DTs are of Siemens make?')
 # chatbot.askMeAnything('how many DTs are of BDI make?')
@@ -69,3 +71,4 @@ chatbot = DBChatBot()
 # chatbot.askMeAnything('what are the types of make available?')
 # chatbot.askMeAnything('how many types of alerts available?')
 # chatbot.askMeAnything('total count the frequency with 49?')
+# chatbot.askMeAnything('total count the I_R with 49?')
