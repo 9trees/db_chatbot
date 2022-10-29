@@ -4,11 +4,13 @@ from T5SQLConnector import T5SQLConnector
 from SQLQueryParser import SQLQueryParser
 from recommendation import RecommendationModule
 from utils import measure
+import dummylog
 
 
 # video
 class DBChatBot:
     def __init__(self):
+        self.logger = dummylog.DummyLog()
         self.T5SQLConnector = T5SQLConnector()
         self.dbConnection = connectToSqliteDB()
         self.sqlParser = SQLQueryParser()
@@ -20,16 +22,18 @@ class DBChatBot:
         # if cachedQuestion:
         #     cleanQuery = cachedQuestion
         # else:
+        self.logger.logger.info('Question Asked ==> ' + question)
         sqlQuery = self.T5SQLConnector.runModel(question)
         cleanQuery = self.sqlParser.parseQuery(sqlQuery)
-        print('this is query', cleanQuery)
         try:
             dataFrame = pd.read_sql(cleanQuery, con=self.dbConnection)
             if len(dataFrame) > 0:
                 columnName = list(dataFrame.columns)[0]
                 if len(dataFrame) == 1:
                     print("\033[1;34m", dataFrame.iloc[0][columnName])
+                    self.logger.logger.info('Answer ==> ' + str(dataFrame.iloc[0][columnName]))
                 else:
+                    self.logger.logger.info('Answer ==> ' + str(dataFrame))
                     print("\033[1;34m", dataFrame)
         except:
             recommendedQuestion = self.recommender.suggestTheQuestion(question.lower(), needType='recommendedQuestion')
@@ -42,7 +46,7 @@ class DBChatBot:
                     if len(dataFrame) > 0:
                         columnName = list(dataFrame.columns)[0]
                         if len(dataFrame) == 1:
-                            print("\033[34m" ,str(dataFrame.iloc[0][columnName]))
+                            print("\033[34m", str(dataFrame.iloc[0][columnName]))
                         else:
                             print("\033[1;34m", dataFrame)
             else:
@@ -51,8 +55,11 @@ class DBChatBot:
 
 chatbot = DBChatBot()
 # video
+# chatbot.askMeAnything('what is the maxiumum value of I_Y?')
+chatbot.askMeAnything('show me the minimum frequency?')
 # chatbot.askMeAnything('count timestamp with manufacturename with KEL')
 # chatbot.askMeAnything('show the timestamp with manufacturename as KEL')
+# chatbot.askMeAnything('list all V_R with Chennai Region')
 # chatbot.askMeAnything('show me all the timestamp')
 # chatbot.askMeAnything('how many DTs are of Siemens make')
 # chatbot.askMeAnything('how many DTs are of BDI make')
@@ -74,4 +81,3 @@ chatbot = DBChatBot()
 # chatbot.askMeAnything('total count the I_R with 49')
 # chatbot.askMeAnything('get timestamp with V_R = 239')
 # chatbot.askMeAnything('get I_R with V_R 231')
-

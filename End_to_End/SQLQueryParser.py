@@ -3,11 +3,13 @@ from FuzzyMatcher import FuzzyMatch
 import sqlparse
 import re
 import itertools
+import dummylog
 
 
 class SQLQueryParser:
 
     def __init__(self):
+        self.logger = dummylog.DummyLog()
         self.fuzzyMatcher = FuzzyMatch()
         self.columnsFromTables = getTheColumns()
         self.parsedTokens = None
@@ -18,23 +20,22 @@ class SQLQueryParser:
 
     def parseQuery(self, query):
         self.processedQuery = query
-        print("Query: ", self.processedQuery)
+        self.logger.logger.info("NLP2SQL model output Query ==>" + self.processedQuery)
         self.rightAndLeftStrip()
-        print("Query strip: ", self.processedQuery)
         self.replaceComparisonStrings()
-        print("Query replace Comparison Strings: ", self.processedQuery)
+        self.logger.logger.info("Query replace Comparison Strings ==>" + self.processedQuery)
         self.findColumns()
-        print("Columns found: ", self.columnNames)
+        self.logger.logger.info("Columns found ==>" + str(self.columnNames))
         self.replaceColumnNames()
-        print("Query replaced columns: ", self.processedQuery)
+        self.logger.logger.info("Query replaced columns ==>" + self.processedQuery)
         self.replaceTableName()
-        print("Query replaced table names: ", self.processedQuery)
+        self.logger.logger.info("Query replaced table names ==>" + self.processedQuery)
         self.relationalDataBaseConnector()
-        print("Query replaced with relational tables: ", self.processedQuery)
+        self.logger.logger.info("Query replaced with relational tables ==>" + self.processedQuery)
         self.keywordFormatter()
-        print("Query keyword Formatter: ", self.processedQuery)
+        self.logger.logger.info("Query keyword Formatter ==>" + self.processedQuery)
         self.SQLFormatter()
-        print("Final Query: ", self.processedQuery)
+        self.logger.logger.info("Final Query ==>" + self.processedQuery)
         self.clearVariables()
         return self.processedQuery
 
@@ -85,6 +86,8 @@ class SQLQueryParser:
             matchValue = self.fuzzyMatcher.fuzzywuzzy(column)
             if matchValue:
                 replaceList.append(matchValue)
+            else:
+                self.correctColumns.append(column)
 
         print(replaceList)
         if replaceList:
@@ -114,6 +117,14 @@ class SQLQueryParser:
     def keywordFormatter(self):
         if ' COUNT ' in self.processedQuery:
             word = self.processedQuery.split(' COUNT ')[1].split(' ')[0]
+            self.processedQuery = self.processedQuery.replace(word, "(" + word + ")")
+
+        if ' MAX ' in self.processedQuery:
+            word = self.processedQuery.split(' MAX ')[1].split(' ')[0]
+            self.processedQuery = self.processedQuery.replace(word, "(" + word + ")")
+
+        if ' MIN ' in self.processedQuery:
+            word = self.processedQuery.split(' MIN ')[1].split(' ')[0]
             self.processedQuery = self.processedQuery.replace(word, "(" + word + ")")
 
         if ' = ' in self.processedQuery and ' to ' in self.processedQuery:
