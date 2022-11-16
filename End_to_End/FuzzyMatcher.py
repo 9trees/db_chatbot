@@ -17,7 +17,7 @@ class FuzzyMatch:
     def __init__(self):
         self.columnsFromTables = getTheColumns()
         self.allColumnNames = list(itertools.chain(*[i for i in self.columnsFromTables.values()]))
-        self.model = KeyedVectors.load_word2vec_format(r"dependency_files\glove.6B.50d.txt")
+        self.model = KeyedVectors.load_word2vec_format(r"dependency_files\glove.6B.50d.txt",no_header=True)
         self.stopWords = stopwords.words('english')
         punctuation_set = set(string.punctuation)
         stopChar = set(list(bullet_set) + list(punctuation_set))

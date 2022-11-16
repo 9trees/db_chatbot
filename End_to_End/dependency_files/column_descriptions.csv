@@ -1,0 +1,56 @@
+column ,names
+Time_Stamp,"timestamp, time"
+V_R,R-Phase voltage
+V_Y,Y-Phase voltage
+V_B,B-Phase voltage
+VRB,B-R line voltage
+VRY,R-Y line voltage
+VYB,Y-B line voltage
+I_R,R-Phase current
+I_Y,Y-Phase current
+I_B,B-Phase current
+kW,Total Active power
+kVA,Total Apparent power
+PF_R,R-phase powerfactor
+PF_Y,Y-phase powerfactor
+PF_B,B-phase powerfactor
+THD_V_R,R-Phase Voltage Total Harmonics Distortion
+THD_V_Y,Y-Phase Voltage Total Harmonics Distortion
+THD_V_B,B-Phase Voltage Total Harmonics Distortion
+THD_I_R,R-Phase Current Total Harmonics Distortion
+THD_I_Y,Y-Phase Current Total Harmonics Distortion
+THD_I_B,B-Phase Current Total Harmonics Distortion
+FREQUENCY,
+Frwd_kWh,Forward Active Energy 
+REV_ACTENERGY,
+FRWD_APPENERGY,
+FRWD_REACTENERGY,
+kVA_R,R-Phase Apparent Power 
+kVA_Y,Y-Phase Apparent Power
+kVA_B,B-Phase Apparent Power
+KVAH_FWD,Forward Apparent Energy 
+KVAH_REV,Reverse Apparent Energy 
+kVAr_R,R-Phase Reactive Power
+KVARH_LAG_FWD,Forward Lag Reactive Energy 
+KVARH_LAG_REV,Reverse Lag Reactive Energy 
+KVARH_LEAD_FWD,Forward Lead Reactive Energy 
+KVARH_LEAD_REV,Reverse Lead Reactive Energy 
+kVAr_Y,Y-Phase Reactive Power
+kVAr_B,B-Phase Reactive Power
+kWH_Fwd,Forward Active Energy
+KWH_REV,Reverse Active Energy
+kW_R,R-Phase Active Power 
+kW_Y,Y-Phase Active Power
+kW_B,B-Phase Active Power
+kVA_1,
+REV_APPENERGY,
+REV_REACTENERGY,
+TOT_kVAh,
+TOT_KVARH_LEG,
+TOT_kWh_Fwd_kWh_Active_Energy_Sent_Out,
+Unnamed_column1,
+TEMP4,Oil temperature
+TOT_KVAH_1,
+TOT_KVARH_LEG_1,
+TOT_KWH,
+mainId_id,

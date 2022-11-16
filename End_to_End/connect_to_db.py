@@ -42,7 +42,7 @@ def connectToDigitalOcean():
 
 
 def connectToSqliteDB():
-    return sqlite3.connect(r"C:\Tamil\temp\db_chatbot\django_connecter\pythonsqlite.db")
+    return sqlite3.connect(r"dependency_files\pythonsqlite.db")
 
 
 # dataFrame = pd.read_sql("SELECT Time_Stamp FROM  polls_events", con=connectToSqliteDB())
