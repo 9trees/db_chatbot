@@ -1,9 +1,9 @@
-column ,names
+column,names
 Time_Stamp,"timestamp, time"
-V_R,R-Phase voltage
-V_Y,Y-Phase voltage
-V_B,B-Phase voltage
-VRB,B-R line voltage
+V_R,"R-Phase voltage, r volt, r phase volt"
+V_Y,"Y-Phase voltage. Y volt, y phase volt"
+V_B,"B-Phase voltage, b volt"
+VRB,"B-R line voltage,b r line volt, br volt"
 VRY,R-Y line voltage
 VYB,Y-B line voltage
 I_R,R-Phase current
@@ -53,4 +53,31 @@ TEMP4,Oil temperature
 TOT_KVAH_1,
 TOT_KVARH_LEG_1,
 TOT_KWH,
-mainId_id,
+mainId_id,"Dts, DT, Transformers, transformer"
+Manufacturer_name,"Manufacturer name, Manufacturer, Manufacture, Manufacture name, make, made"
+Transformer_location_name,"Transformer location name, Transformer location, location of the transformer, location of transformer"
+Transformer_number,"Transformer number, Transformer serial number"
+Meter_number,Meter number
+Manufacturer_Serial_number,"Manufacturer Serial number, Manufacturer  number"
+Section,Section
+Sub_Division,Sub Division
+Division,Division
+Circle,Circle
+Region,Region
+Latitude,"Latitude, lat"
+Longitude,"Longitude, long"
+Status,Status
+Transformers_Name_plate,Transformers Name plate
+Volts_H_V,"Volts H V, Volts HV"
+Volts_L_V,"Volts L V, Volts LV"
+Amperes_H_V,"Amperes H V, Amperes HV"
+Amperes_L_V,"Amperes L V, Amperes HV"
+Phases_HV,"Phases HV, Phases H V"
+Phases_LV,"Phases LV, Phases L V "
+Type_of_Cooling,"Type of Cooling, Type Cooling, Cooling Type"
+Impedance_volts,"Impedance volts, Impedance volt,  volts Impedance, volt Impedance"
+Connection_symbols,"Connection symbols, Connection symbol"
+Core_and_winding,"Core and winding, Core  winding, winding  and Core"
+Total_weight,Total weight 
+Oil,Oil
+Year_of_manufacturer,"Year of manufacturer,  manufacturer year , manufacture year, year of manufacture, make year, year of make, made year, year of made"

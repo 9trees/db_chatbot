@@ -3,6 +3,7 @@ import pandas as pd
 from T5SQLConnector import T5SQLConnector
 from SQLQueryParser import SQLQueryParser
 from recommendation import RecommendationModule
+from questionParser import QuestionParser
 from utils import measure
 import dummylog
 
@@ -15,6 +16,7 @@ class DBChatBot:
         self.dbConnection = connectToSqliteDB()
         self.sqlParser = SQLQueryParser()
         self.recommender = RecommendationModule()
+        self.questionParser = QuestionParser()
 
     @measure
     def askMeAnything(self, question):
@@ -23,6 +25,7 @@ class DBChatBot:
         #     cleanQuery = cachedQuestion
         # else:
         self.logger.logger.info('Question Asked ==> ' + question)
+        question = self.questionParser.checkAlternateNames(question)
         sqlQuery = self.T5SQLConnector.runModel(question)
         cleanQuery = self.sqlParser.parseQuery(sqlQuery)
         try:
@@ -56,12 +59,12 @@ class DBChatBot:
 chatbot = DBChatBot()
 # video
 # chatbot.askMeAnything('what is the maxiumum value of I_Y?')
-chatbot.askMeAnything('show me the minimum frequency?')
-# chatbot.askMeAnything('count timestamp with manufacturename with KEL')
+# chatbot.askMeAnything('show me the minimum frequency?')
+# chatbot.askMeAnything('count timestamp with manufacture name with KEL')
 # chatbot.askMeAnything('show the timestamp with manufacturename as KEL')
 # chatbot.askMeAnything('list all V_R with Chennai Region')
 # chatbot.askMeAnything('show me all the timestamp')
-# chatbot.askMeAnything('how many DTs are of Siemens make')
+# chatbot.askMeAnything('how many DTs are of kel make')
 # chatbot.askMeAnything('how many DTs are of BDI make')
 # chatbot.askMeAnything('How many Transformers in my area have new alerts today')
 # chatbot.askMeAnything('how many transformers having 300 load ')
@@ -78,6 +81,6 @@ chatbot.askMeAnything('show me the minimum frequency?')
 # chatbot.askMeAnything('what are the types of make available')
 # chatbot.askMeAnything('how many types of alerts available')
 # chatbot.askMeAnything('total count the frequency with 49')
-# chatbot.askMeAnything('total count the I_R with 49')
+chatbot.askMeAnything('total count the R Phase current with 49')
 # chatbot.askMeAnything('get timestamp with V_R = 239')
 # chatbot.askMeAnything('get I_R with V_R 231')
