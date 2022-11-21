@@ -6,7 +6,7 @@ V_B,"B-Phase voltage, b volt"
 VRB,"B-R line voltage,b r line volt, br volt"
 VRY,R-Y line voltage
 VYB,Y-B line voltage
-I_R,R-Phase current
+I_R,"R-Phase current, wcurret"
 I_Y,Y-Phase current
 I_B,B-Phase current
 kW,Total Active power

@@ -4,12 +4,12 @@ import sqlparse
 import re
 import itertools
 import dummylog
-
+from datetime import datetime
 
 class SQLQueryParser:
 
     def __init__(self):
-        self.logger = dummylog.DummyLog()
+        self.logger = dummylog.DummyLog(log_name=datetime.now().strftime('%d-%m-%Y-%H-%M.log'))
         self.fuzzyMatcher = FuzzyMatch()
         self.columnsFromTables = getTheColumns()
         self.parsedTokens = None

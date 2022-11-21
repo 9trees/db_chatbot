@@ -6,12 +6,13 @@ from recommendation import RecommendationModule
 from questionParser import QuestionParser
 from utils import measure
 import dummylog
+from datetime import datetime
 
 
 # video
 class DBChatBot:
     def __init__(self):
-        self.logger = dummylog.DummyLog()
+        self.logger = dummylog.DummyLog(log_name=datetime.now().strftime('%d-%m-%Y-%H-%M.log'))
         self.T5SQLConnector = T5SQLConnector()
         self.dbConnection = connectToSqliteDB()
         self.sqlParser = SQLQueryParser()
@@ -82,6 +83,7 @@ chatbot = DBChatBot()
 # chatbot.askMeAnything('what are the types of make available')
 # chatbot.askMeAnything('how many types of alerts available')
 # chatbot.askMeAnything('total count the frequency with 49')
-chatbot.askMeAnything('total count the R Phase current with 49')
+# chatbot.askMeAnything('total count wcurret with 49')
 # chatbot.askMeAnything('get timestamp with V_R = 239')
 # chatbot.askMeAnything('get I_R with V_R 231')
+chatbot.askMeAnything('list all r phase volt with Chennai Region')
