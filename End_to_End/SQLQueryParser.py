@@ -20,22 +20,22 @@ class SQLQueryParser:
 
     def parseQuery(self, query):
         self.processedQuery = query
-        self.logger.logger.info("NLP2SQL model output Query ==>" + self.processedQuery)
+        self.logger.logger.info("NLP2SQL model output Query       ==>" + self.processedQuery)
         self.rightAndLeftStrip()
         self.replaceComparisonStrings()
         self.logger.logger.info("Query replace Comparison Strings ==>" + self.processedQuery)
         self.findColumns()
-        self.logger.logger.info("Columns found ==>" + str(self.columnNames))
+        self.logger.logger.info("Columns found                    ==>" + str(self.columnNames))
         self.replaceColumnNames()
-        self.logger.logger.info("Query replaced columns ==>" + self.processedQuery)
+        self.logger.logger.info("Query replaced columns           ==>" + self.processedQuery)
         self.replaceTableName()
-        self.logger.logger.info("Query replaced table names ==>" + self.processedQuery)
+        self.logger.logger.info("Query replaced table names       ==>" + self.processedQuery)
         self.relationalDataBaseConnector()
-        self.logger.logger.info("Query replaced with relational tables ==>" + self.processedQuery)
+        self.logger.logger.info("Query replaced relational tables ==>" + self.processedQuery)
         self.keywordFormatter()
-        self.logger.logger.info("Query keyword Formatter ==>" + self.processedQuery)
+        self.logger.logger.info("Query keyword Formatter          ==>" + self.processedQuery)
         self.SQLFormatter()
-        self.logger.logger.info("Final Query ==>" + self.processedQuery)
+        self.logger.logger.info("Final Query                      ==>" + self.processedQuery)
         self.clearVariables()
         return self.processedQuery
 

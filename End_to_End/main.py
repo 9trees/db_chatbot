@@ -24,8 +24,9 @@ class DBChatBot:
         # if cachedQuestion:
         #     cleanQuery = cachedQuestion
         # else:
-        self.logger.logger.info('Question Asked ==> ' + question)
+        self.logger.logger.info('Question Asked                   ==> ' + question)
         question = self.questionParser.checkAlternateNames(question)
+        self.logger.logger.info('Modifed Question by descriptions ==> ' + question)
         sqlQuery = self.T5SQLConnector.runModel(question)
         cleanQuery = self.sqlParser.parseQuery(sqlQuery)
         try:
@@ -34,9 +35,9 @@ class DBChatBot:
                 columnName = list(dataFrame.columns)[0]
                 if len(dataFrame) == 1:
                     print("\033[1;34m", dataFrame.iloc[0][columnName])
-                    self.logger.logger.info('Answer ==> ' + str(dataFrame.iloc[0][columnName]))
+                    self.logger.logger.info('Answer                           ==> ' + str(dataFrame.iloc[0][columnName]))
                 else:
-                    self.logger.logger.info('Answer ==> ' + str(dataFrame))
+                    self.logger.logger.info('Answer                           ==> \n' + str(dataFrame))
                     print("\033[1;34m", dataFrame)
         except:
             recommendedQuestion = self.recommender.suggestTheQuestion(question.lower(), needType='recommendedQuestion')
