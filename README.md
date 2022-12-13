@@ -8,6 +8,8 @@
 
 
 ## 2. DB Chatbot Diagram
-![Untitled presentation](https://user-images.githubusercontent.com/8901901/207459207-9fff9b87-8068-4a86-b90f-35faa00f4c71.png)
+<img width="1035" alt="Screenshot 2022-12-13 at 22 39 18" src="https://user-images.githubusercontent.com/8901901/207460122-328e521a-ce20-4466-a49f-8fc4e664a8c8.png">
+
+
 
 ## 3. How to run the Module
